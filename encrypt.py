@@ -1,31 +1,63 @@
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+from Crypto.Cipher import AES, PKCS1_OAEP
+
+from key import KeyBase
 
 
-class Encrypt(object):
-    def __init__(self, key):
-        self.__key = key
+def encrypt_data(data: bytes, rsa_key: KeyBase):
+    """Encrypt data
 
-    def encrypt_data(self, data: bytes):
-        cipher = AES.new(self.__key, AES.MODE_EAX)
-        nonce = cipher.nonce
-        cipher_text, tag = cipher.encrypt_and_digest(data)
-        return nonce + tag + cipher_text
+    :param data: data to be encrypted
+    :param rsa_key: a KeyBase class to provide public key
+    :return: encrypted data with encrypted key
 
-    def decrypt_data(self, data: bytes):
-        cipher = AES.new(self.__key, AES.MODE_EAX)
+    len(key_enc) == 256, len(nonce) == 16, len(tag) == 16
+    """
 
+    # encrypt the data
+    key = get_random_bytes(32)  # AES-256
+    cipher_aes = AES.new(key, AES.MODE_EAX)
+    nonce = cipher_aes.nonce
+    data_enc, tag = cipher_aes.encrypt_and_digest(data)
 
-class Decrypt(object):
-    def __init__(self, key):
-        self.__key = key
-        self.__cipher = AES.new(key, AES.MODE_CBC)
+    # encrypt the AES key
+    cipher_rsa = PKCS1_OAEP.new(rsa_key.public_key)
+    key_enc = cipher_rsa.encrypt(key)
 
-    def decrypt_data(self, data: bytes):
-        cipher = AES.new(key, AES.MODE_CBC)
-        data = self.__cipher.decrypt(data)
-        return unpad(data, AES.block_size)
+    return key_enc + nonce + tag + data_enc
 
 
+def decrypt_data(data: bytes, rsa_key: KeyBase):
+    """Decrypt data
+
+    :param data: data to be decrypted
+    :param rsa_key: a KeyBase class to provide private key
+    :return: decrypted data
+    """
+
+    # unpack data
+    key_enc = data[:256]
+    nonce = data[256:272]
+    tag = data[272:288]
+    data_enc = data[288:]
+
+    # decrypt the key
+    cipher_rsa = PKCS1_OAEP.new(rsa_key.private_key)
+    key = cipher_rsa.decrypt(key_enc)
+
+    # decrypt the data
+    cipher_aes = AES.new(key, AES.MODE_EAX, nonce)
+    data = cipher_aes.decrypt_and_verify(data_enc, tag)
+
+    return data
+
+
+# tests
 if __name__ == '__main__':
-    from Crypto.Random import get_random_bytes
+    from key import KeyGenerator
+
+    k = KeyGenerator(b'123')
+    t = get_random_bytes(100)
+    t_enc = encrypt_data(t, k)
+    t_dec = decrypt_data(t_enc, k)
+    assert t == t_dec
