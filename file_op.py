@@ -48,6 +48,8 @@ def decrypt_file(file_name: str, rsa_key: KeyBase):
 
     :param file_name: file to be decrypted, just a file name, not a path
     :param rsa_key: a KeyBase class to provide private key
+
+    :raise FileExistsError: if file with the same name exists in dec_path
     """
 
     file_path = os.path.join(enc_path, file_name)
