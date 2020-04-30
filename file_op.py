@@ -68,9 +68,30 @@ def decrypt_file(file_name: str, rsa_key: KeyBase):
     os.remove(file_path)
 
 
+def delete_all_enc_files():
+    """Remove all encrypted files
+
+    This function is ONLY used when failed password attempt times reaches 10
+
+    CAUTION: this function is DANGEROUS!!!!
+    ALL ENCRYPTED FILES WILL BE DELETED!!!!
+    """
+    for root, dirs, files in os.walk(enc_path, topdown=False):
+        for name in files:
+            print(os.path.join(root, name))
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            print(os.path.join(root, name))
+            os.rmdir(os.path.join(root, name))
+
+
 # tests
 if __name__ == '__main__':
     from key import KeyGenerator, KeyGetter
+
+    delete_all_enc_files()
+    # now enc_path should be empty
+    assert len(list(os.walk(enc_path, topdown=False))) == 1
 
     with open('./original_file/test.txt', 'w') as f:
         f.write('test test test test test ')
