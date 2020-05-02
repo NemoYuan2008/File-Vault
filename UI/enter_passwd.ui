@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>密码验证</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -55,7 +55,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="le_password">
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
         </property>
