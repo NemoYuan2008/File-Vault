@@ -1,4 +1,5 @@
 import dbm
+import logging
 
 from Crypto.Hash import SHA3_256
 
@@ -15,6 +16,8 @@ def register_password(password):
     with dbm.open('./sys_file/db', 'c') as db:
         db[b'password'] = password_hash
         db[b'wrong_count'] = b'0'
+
+    logging.info('New password is registered')
 
 
 class Authentication(object):
@@ -43,10 +46,13 @@ class Authentication(object):
 
         if input_password_hash == self.__correct_password_hash:
             s.__wrong_count = 0
+            logging.info('Login succeed')
             return True
         else:
+            logging.warning('Incorrect password')
             self.__wrong_count += 1
             if self.__wrong_count >= 10:
+                logging.error('10 failed password attempts')
                 raise ValueError('10 failed password attempts')
             return False
 

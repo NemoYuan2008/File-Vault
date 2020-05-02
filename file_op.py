@@ -1,5 +1,6 @@
 import os
 import dbm
+import logging
 
 from encrypt import encrypt_data, decrypt_data
 from key import KeyBase
@@ -39,6 +40,8 @@ def encrypt_file(file_path: str, rsa_key: KeyBase):
 
     os.remove(file_path)
 
+    logging.info('File %s is encrypted and deleted, encrypted file is written to %s', file_path, out_path)
+
 
 def decrypt_file(file_name: str, rsa_key: KeyBase):
     """Decrypt the given file
@@ -60,12 +63,15 @@ def decrypt_file(file_name: str, rsa_key: KeyBase):
     # path + file name without '.enc'
     out_path = os.path.join(dec_path, os.path.splitext(file_name)[0])
     if os.path.exists(out_path):
+        logging.error('File %s already exists in the encrypted files directory', file_name)
         raise FileExistsError('Corrupted file name')
 
     with open(out_path, 'wb') as f:
         f.write(data)
 
     os.remove(file_path)
+
+    logging.info('Encrypted file %s is decrypted and deleted, decrypted file is written to %s', file_name, out_path)
 
 
 def delete_all_enc_files():
@@ -84,10 +90,14 @@ def delete_all_enc_files():
             print(os.path.join(root, name))
             os.rmdir(os.path.join(root, name))
 
+    logging.warning('Deleting all Encrypted files and the database!')
+
 
 # tests
 if __name__ == '__main__':
     from key import KeyGenerator, KeyGetter
+
+    logging.basicConfig(level=logging.DEBUG)
 
     delete_all_enc_files()
     # now enc_path should be empty
@@ -99,7 +109,7 @@ if __name__ == '__main__':
     with open('./original_file/test.txt', 'rb') as f:
         ori_data = f.read()
 
-    k = KeyGetter(b'123')
+    k = KeyGetter(b'123123')
     encrypt_file('./original_file/test.txt', k)
     decrypt_file('test.txt.enc', k)
 

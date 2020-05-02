@@ -1,5 +1,6 @@
 import abc
 import dbm
+import logging
 
 from Crypto.PublicKey import RSA
 
@@ -31,14 +32,18 @@ class KeyGenerator(KeyBase):
         self.__write_private_key()
 
     def __write_public_key(self):
+        """Write public key to database"""
         with dbm.open('./sys_file/db', 'c') as db:
             db[b'public_key'] = self.__public_key.export_key()
+        logging.info('Public key is generated and written to database')
 
     def __write_private_key(self):
+        """Write private key to self.__path"""
         private_key_enc = self.__private_key.export_key(passphrase=self._pass_phrase, pkcs=8,
                                                         protection="scryptAndAES128-CBC")
         with open(self.__path, 'wb') as f:
             f.write(private_key_enc)
+        logging.info('Private key is generated and written to %s', self.__path)
 
     @property
     def private_key(self):
@@ -57,14 +62,18 @@ class KeyGetter(KeyBase):
         self.__private_key = self.__get_private_key()
 
     def __get_public_key(self):
+        """Read and return the public key"""
         with dbm.open('./sys_file/db', 'c') as db:
             public_key = db[b'public_key']
+        logging.info('Public key is read from database')
         return RSA.import_key(public_key)
 
     def __get_private_key(self):
+        """Read and return the private key"""
         with open(self.__path) as f:
             private_key_enc = f.read()
         # TODO: add handler to deal with incorrect password
+        logging.info('Private key is read from %s', self.__path)
         return RSA.import_key(private_key_enc, passphrase=self._pass_phrase)
 
     @property
@@ -78,6 +87,7 @@ class KeyGetter(KeyBase):
 
 # test
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     s = KeyGenerator('123123')
     h = KeyGetter('123123')
     assert s.public_key == h.public_key
