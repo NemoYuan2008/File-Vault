@@ -2,9 +2,11 @@ import sys
 import dbm
 
 from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox
+from PyQt5.QtGui import QIcon
 
 from UI.enter_passwd import Ui_DialogEnterPasswd
 from UI.set_passwd import Ui_DialogSetPasswd
+from control.mainwindow import MainWindow
 from password import Authentication, register_password
 from file_op import delete_all_enc_files
 
@@ -23,7 +25,10 @@ def initialize():
 class Login(object):
     def __init__(self):
         app = QApplication(sys.argv)
+        app.setWindowIcon(QIcon('ico/app.png'))
+
         self.dialog = QDialog()
+        self.main_win = MainWindow()
 
         if initialize():
             self.authenticator = Authentication()
@@ -43,8 +48,10 @@ class Login(object):
         password = self.verify_password_dialog.le_password.text()
         try:
             if self.authenticator.check(password):
+                QMessageBox.information(self.dialog, '密码正确', '密码正确')
                 # TODO: Enter main window
-                pass
+                self.main_win.show()
+                self.dialog.close()
             else:
                 QMessageBox.warning(self.dialog, '密码错误',
                                     '密码错误, 还有%d次机会, 否则所有已加密文件将被删除' %
