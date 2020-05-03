@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 
 from UI.verify_password import Ui_DialogEnterPasswd
 from UI.set_password import Ui_DialogSetPasswd
-from control.mainwindow import MainWindow
+from control.main_window import MainWindow
 from password import Authentication, register_password
 from file_op import delete_all_enc_files
 
