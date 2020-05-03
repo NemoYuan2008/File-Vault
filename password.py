@@ -46,7 +46,7 @@ class Authentication(object):
         input_password_hash = SHA3_256.new(input_password).digest()
 
         if input_password_hash == self.__correct_password_hash:
-            s.__wrong_count = 0
+            self.__wrong_count = 0
             logging.info('Login succeed')
             return True
         else:
