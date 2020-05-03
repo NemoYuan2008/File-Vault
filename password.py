@@ -14,6 +14,7 @@ def register_password(password):
     password_hash = SHA3_256.new(password).digest()
 
     with dbm.open('./sys_file/db', 'c') as db:
+        db[b'has_init'] = b'True'
         db[b'password'] = password_hash
         db[b'wrong_count'] = b'0'
 
@@ -23,9 +24,9 @@ def register_password(password):
 class Authentication(object):
     def __init__(self):
         """Read correct_password_hash and wrong_count from db"""
-        with dbm.open('./sys_file/db', 'r') as db:
-            self.__correct_password_hash = db[b'password']
-            self.__wrong_count = int(db[b'wrong_count'])
+        with dbm.open('./sys_file/db', 'c') as db:
+            self.__correct_password_hash = db.get(b'password', None)
+            self.__wrong_count = int(db.get(b'wrong_count', b'0'))
 
     def __del__(self):
         """Save wrong_count to db"""
