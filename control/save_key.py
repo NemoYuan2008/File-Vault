@@ -21,12 +21,16 @@ class SaveKeyDialog(QDialog):
         self.ui.le_path.setText(path)
 
     def __generate_key(self):
+        QMessageBox.information(self, '正在生成密钥', '正在生成密钥, 请稍候')
+
         path = self.ui.le_path.text()
         with dbm.open('./sys_file/db', 'c') as db:
             db['private_key_path'] = path.encode('utf-8')
 
         try:
             self.generator = KeyGenerator()
+
+            QMessageBox.information(self, '成功', '密钥生成完成, 请妥善保存')
             self.main_win = MainWindow()
             self.main_win.show()
             self.close()
