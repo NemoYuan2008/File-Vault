@@ -13,6 +13,9 @@ class KeyBase(abc.ABC):
             pass_phrase = pass_phrase.encode('utf-8')
         self._pass_phrase = pass_phrase
 
+        with dbm.open('./sys_file/db', 'r') as db:
+            self._path = db[b'private_key_path'].decode('utf-8')
+
     @property
     @abc.abstractmethod
     def private_key(self):
@@ -25,9 +28,8 @@ class KeyBase(abc.ABC):
 
 
 class KeyGenerator(KeyBase):
-    def __init__(self, pass_phrase, path='./private_key.bin'):
+    def __init__(self, pass_phrase):
         super().__init__(pass_phrase)
-        self.__path = path
         self.__private_key = RSA.generate(2048)
         self.__public_key = self.__private_key.publickey()
         self.__write_public_key()
@@ -43,11 +45,11 @@ class KeyGenerator(KeyBase):
         """Write private key to self.__path"""
         private_key_enc = self.__private_key.export_key(passphrase=self._pass_phrase, pkcs=8,
                                                         protection="scryptAndAES128-CBC")
-        with open(self.__path, 'wb') as f:
+        with open(self._path, 'wb') as f:
             f.write(private_key_enc)
-        chmod(self.__path, S_IRUSR)
+        chmod(self._path, S_IRUSR)
 
-        logging.info('Private key is generated and written to %s', self.__path)
+        logging.info('Private key is generated and written to %s', self._path)
 
     @property
     def private_key(self):
@@ -59,9 +61,8 @@ class KeyGenerator(KeyBase):
 
 
 class KeyGetter(KeyBase):
-    def __init__(self, pass_phrase, path='./private_key.bin'):
+    def __init__(self, pass_phrase):
         super().__init__(pass_phrase)
-        self.__path = path
         self.__public_key = self.__get_public_key()
         self.__private_key = self.__get_private_key()
 
@@ -74,10 +75,10 @@ class KeyGetter(KeyBase):
 
     def __get_private_key(self):
         """Read and return the private key"""
-        with open(self.__path) as f:
+        with open(self._path) as f:
             private_key_enc = f.read()
         # TODO: add handler to deal with incorrect password
-        logging.info('Private key is read from %s', self.__path)
+        logging.info('Private key is read from %s', self._path)
         return RSA.import_key(private_key_enc, passphrase=self._pass_phrase)
 
     @property
@@ -92,6 +93,8 @@ class KeyGetter(KeyBase):
 # test
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
+    with dbm.open('./sys_file/db', 'w') as d:
+        d[b'private_key_path'] = b'./private_key.bin'
     s = KeyGenerator('123123')
     h = KeyGetter('123123')
     assert s.public_key == h.public_key
