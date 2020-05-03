@@ -4,7 +4,10 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 
 from UI.verify_password import Ui_DialogEnterPasswd
 from UI.set_password import Ui_DialogSetPasswd
+
 from control.main_window import MainWindow
+from control.save_key import SaveKeyDialog
+
 from password import Authentication, register_password
 from file_op import delete_all_enc_files
 
@@ -64,6 +67,9 @@ class LoginDialog(QDialog):
         password2 = self.ui_set_password.le_confirm.text()
         if password1 == password2:
             register_password(password1)
+            self.close()
+            self.save_key_dialog = SaveKeyDialog()
+            self.save_key_dialog.exec()
             # TODO: Enter main window
         else:
             QMessageBox.warning(self, '输入不正确', '两次密码输入不一致, 请重新输入')

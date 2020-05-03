@@ -10,11 +10,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 252)
-        self.frame = QtWidgets.QFrame(Dialog)
+class Ui_save_key(object):
+    def setupUi(self, save_key):
+        save_key.setObjectName("save_key")
+        save_key.resize(400, 252)
+        self.frame = QtWidgets.QFrame(save_key)
         self.frame.setGeometry(QtCore.QRect(10, 10, 381, 221))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -79,13 +79,13 @@ class Ui_Dialog(object):
         self.horizontalLayout_2.setStretch(2, 3)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(save_key)
+        QtCore.QMetaObject.connectSlotsByName(save_key)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, save_key):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "保存密钥"))
-        self.label.setText(_translate("Dialog", "选择保存密钥的路径"))
-        self.label_2.setText(_translate("Dialog", "请选择移动存储设备, 此设备将作为USB Key"))
-        self.btn_browse.setText(_translate("Dialog", "浏览..."))
-        self.btn_ok.setText(_translate("Dialog", "确定"))
+        save_key.setWindowTitle(_translate("save_key", "保存密钥"))
+        self.label.setText(_translate("save_key", "选择保存密钥的路径"))
+        self.label_2.setText(_translate("save_key", "请选择移动存储设备, 此设备将作为USB Key"))
+        self.btn_browse.setText(_translate("save_key", "浏览..."))
+        self.btn_ok.setText(_translate("save_key", "确定"))

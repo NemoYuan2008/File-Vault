@@ -8,13 +8,10 @@ from Crypto.PublicKey import RSA
 
 
 class KeyBase(abc.ABC):
-    def __init__(self, pass_phrase):
-        if isinstance(pass_phrase, str):
-            pass_phrase = pass_phrase.encode('utf-8')
-        self._pass_phrase = pass_phrase
-
+    def __init__(self):
         with dbm.open('./sys_file/db', 'r') as db:
             self._path = db[b'private_key_path'].decode('utf-8')
+            self._pass_phrase = db[b'password']
 
     @property
     @abc.abstractmethod
@@ -28,8 +25,8 @@ class KeyBase(abc.ABC):
 
 
 class KeyGenerator(KeyBase):
-    def __init__(self, pass_phrase):
-        super().__init__(pass_phrase)
+    def __init__(self):
+        super().__init__()
         self.__private_key = RSA.generate(2048)
         self.__public_key = self.__private_key.publickey()
         self.__write_public_key()
@@ -61,8 +58,8 @@ class KeyGenerator(KeyBase):
 
 
 class KeyGetter(KeyBase):
-    def __init__(self, pass_phrase):
-        super().__init__(pass_phrase)
+    def __init__(self):
+        super().__init__()
         self.__public_key = self.__get_public_key()
         self.__private_key = self.__get_private_key()
 
