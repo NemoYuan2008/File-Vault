@@ -1,6 +1,6 @@
 import logging
 
-from control.login import Login
+from control.main import Main
 
 
 if __name__ == '__main__':
@@ -8,4 +8,4 @@ if __name__ == '__main__':
                         level=logging.INFO,
                         format='%(levelname)s %(asctime)s %(message)s',
                         datefmt='%m/%d/%Y %I:%M:%S %p')
-    m = Login()
+    m = Main()
