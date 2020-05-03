@@ -1,6 +1,8 @@
 import abc
 import dbm
 import logging
+from os import chmod
+from stat import S_IRUSR
 
 from Crypto.PublicKey import RSA
 
@@ -43,6 +45,8 @@ class KeyGenerator(KeyBase):
                                                         protection="scryptAndAES128-CBC")
         with open(self.__path, 'wb') as f:
             f.write(private_key_enc)
+        chmod(self.__path, S_IRUSR)
+
         logging.info('Private key is generated and written to %s', self.__path)
 
     @property
