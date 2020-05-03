@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'enter_passwd.ui'
+# Form implementation generated from reading ui file 'verify_password.ui'
 #
 # Created by: PyQt5 UI code generator 5.14.2
 #
