@@ -89,7 +89,7 @@ def delete_all_enc_files():
         for name in dirs:
             print(os.path.join(root, name))
             os.rmdir(os.path.join(root, name))
-
+    os.remove('./sys_file/db')
     logging.warning('Deleting all Encrypted files and the database!')
 
 
