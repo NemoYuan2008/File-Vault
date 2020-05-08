@@ -1,10 +1,130 @@
-from PyQt5.QtWidgets import QMainWindow
+from os.path import split
 
-from UI.mainwindow import Ui_MainWindow
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtWidgets import QMainWindow, QToolButton, QApplication, QFileDialog, QMessageBox, QListWidget
+
+from UI.main_window import Ui_MainWindow
+from control.get_key import get_key
+from file_op import encrypt_file, decrypt_file, get_encrypted_file_names
+
+
+class MyToolButton(QToolButton):
+    """Tool button with specific style"""
+
+    def __init__(self):
+        super().__init__()
+
+        font = QFont()
+        font.setPointSize(15)
+
+        self.setFont(font)
+        self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+
+        self.app = QApplication.instance()
+
+        self.__key = get_key()
+
+        if self.__key is None:
+            self.app.quit()
+        else:
+            self.ui = Ui_MainWindow()
+            self.ui.setupUi(self)
+            self.__setup_ui()
+
+    def __setup_ui(self):
+        """Setup UI which isn't setup by self.ui"""
+
+        self.ui.actionEncrypt_file.triggered.connect(self.__encrypt_file)
+        self.ui.actionDecrypt_file.triggered.connect(self.__decrypt_file)
+        self.ui.actionClose.triggered.connect(self.app.quit)
+        self.ui.actionOpen_the_log.triggered.connect(self.__open_log)
+        self.ui.actionClear_the_log.triggered.connect(self.__clear_log)
+
+        self.btn_encrypt = MyToolButton()
+        self.btn_encrypt.setIcon(QIcon('ico/lock.png'))
+        self.btn_encrypt.setText('加密文件')
+        self.btn_encrypt.clicked.connect(self.__encrypt_file)
+
+        self.btn_decrypt = MyToolButton()
+        self.btn_decrypt.setIcon(QIcon('ico/unlock.png'))
+        self.btn_decrypt.setText('解密文件')
+        self.btn_decrypt.clicked.connect(self.__decrypt_file)
+
+        self.btn_open_log = MyToolButton()
+        self.btn_open_log.setIcon(QIcon('ico/log.png'))
+        self.btn_open_log.setText('查看日志')
+        self.btn_open_log.clicked.connect(self.__open_log)
+
+        self.btn_exit = MyToolButton()
+        self.btn_exit.setIcon(QIcon('ico/exit.png'))
+        self.btn_exit.setText('退出')
+        self.btn_exit.clicked.connect(self.app.quit)
+
+        self.ui.toolBar.addWidget(self.btn_encrypt)
+        self.ui.toolBar.addSeparator()
+        self.ui.toolBar.addWidget(self.btn_decrypt)
+        self.ui.toolBar.addSeparator()
+        self.ui.toolBar.addWidget(self.btn_open_log)
+        self.ui.toolBar.addSeparator()
+        self.ui.toolBar.addWidget(self.btn_exit)
+
+        self.ui.listWidget.setSelectionMode(QListWidget.ExtendedSelection)
+        self.__refresh_list()
+
+    def __refresh_list(self):
+        self.ui.listWidget.clear()
+        self.ui.listWidget.addItems(get_encrypted_file_names())
+
+    def __encrypt_file(self):
+        """Slot for actionEncrypt_file.triggered and btn_encrypt.clicked"""
+        paths = QFileDialog.getOpenFileNames(self, caption='请选择要加密的文件')[0]
+        if paths:
+            r = QMessageBox.question(self, '确定加密文件',
+                                     '<p>所选文件将被加密并保存至保险柜中</p>'
+                                     '<p>原文件将被删除, 确定?</p>')
+            if r == QMessageBox.Yes:
+                for path in paths:
+                    try:
+                        encrypt_file(path, self.__key)
+                    except FileExistsError:
+                        QMessageBox.warning(self, '加密错误',
+                                            '<p>加密文件</p>'
+                                            '<p>%s</p>'
+                                            '<p>时发生错误, 因为保险柜中已经有和它同名的文件</p> '
+                                            '<p>请将原文件重命名后再试</p>' % path)
+                self.__refresh_list()
+
+    def __decrypt_file(self):
+        file_names = self.ui.listWidget.selectedItems()
+        if not file_names:
+            QMessageBox.warning(self, '错误', '<p>没有选择文件</p><p>请选择要解密的文件</p>')
+        else:
+            QMessageBox.information(self, '提示', '请选择解密后的文件要保存在哪个文件夹')
+            dec_path = QFileDialog.getExistingDirectory(self, caption='选择保存路径')
+            r = QMessageBox.question(self, '确定解密文件',
+                                     '<p>所选文件将被解密并保存至所选文件夹中</p>'
+                                     '<p>原加密文件将被删除, 确定?</p>')
+            if r == QMessageBox.Yes:
+                for file_name in file_names:
+                    try:
+                        decrypt_file(file_name.text() + '.enc', self.__key, dec_path)
+                    except FileExistsError:
+                        QMessageBox.warning(self, '解密错误',
+                                            '<p>解密文件</p>'
+                                            '<p>%s</p>'
+                                            '<p>时发生错误, 因为所选路径中已经有和它同名的文件</p> '
+                                            '<p>请将同名文件移动至别处后再试</p>' % file_name)
+                    self.__refresh_list()
+                    QMessageBox.information(self, '完成', '文件已解密完成')
+
+    def __open_log(self):
+        pass
+
+    def __clear_log(self):
+        pass
