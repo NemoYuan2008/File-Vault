@@ -16,7 +16,7 @@ def initialize():
     with dbm.open('./sys_file/db', 'c') as db:
         ret = db.get(b'has_init', b'False')
 
-        if ret == b'True':
+        if b'public_key' in db:
             return True
         else:
             db[b'wrong_count'] = b'0'
