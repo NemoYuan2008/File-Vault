@@ -1,4 +1,5 @@
 import dbm
+from os.path import join
 
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
@@ -44,7 +45,7 @@ class SaveKeyDialog(QDialog):
     def __browse_file(self):
         """Slot for btn_browse.clicked"""
 
-        path = QFileDialog.getSaveFileName(self, filter='*.pem')[0]
+        path = QFileDialog.getExistingDirectory(self)
         self.ui.le_path.setText(path)
 
     def __generate_key(self):
@@ -54,7 +55,7 @@ class SaveKeyDialog(QDialog):
         self.msg.show()
         self.msg.button(QMessageBox.Ok).hide()
 
-        path = self.ui.le_path.text()
+        path = join(self.ui.le_path.text(), 'file-vault-key.pem')
         with dbm.open('./sys_file/db', 'c') as db:
             db['private_key_path'] = path.encode('utf-8')
 
