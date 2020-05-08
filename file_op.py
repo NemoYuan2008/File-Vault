@@ -1,6 +1,7 @@
 import os
 import dbm
 import logging
+from operator import itemgetter
 
 from encrypt import encrypt_data, decrypt_data
 from key import KeyBase
@@ -43,12 +44,13 @@ def encrypt_file(file_path: str, rsa_key: KeyBase):
     logging.info('File %s is encrypted and deleted, encrypted file is written to %s', file_path, out_path)
 
 
-def decrypt_file(file_name: str, rsa_key: KeyBase):
+def decrypt_file(file_name: str, rsa_key: KeyBase, dec_path: str = dec_path):
     """Decrypt the given file
 
     The decrypted file is saved to directory dec_path with its original name (without '.enc')
     The encrypted file is deleted
 
+    :param dec_path: a directory to output decrypted files
     :param file_name: file to be decrypted, just a file name, not a path
     :param rsa_key: a KeyBase class to provide private key
 
@@ -91,6 +93,11 @@ def delete_all_enc_files():
             os.rmdir(os.path.join(root, name))
     os.remove('./sys_file/db')
     logging.warning('Deleting all Encrypted files and the database!')
+
+
+def get_encrypted_file_names():
+    """Get a list of all encrypted file names"""
+    return list(map(itemgetter(0), map(os.path.splitext, os.listdir(enc_path))))
 
 
 # tests
