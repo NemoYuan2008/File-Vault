@@ -15,3 +15,4 @@ decrypted_file/
 original_file/
 
 *.bin
+*.pem
