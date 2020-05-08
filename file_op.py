@@ -97,7 +97,22 @@ def delete_all_enc_files():
 
 def get_encrypted_file_names():
     """Get a list of all encrypted file names"""
+
     return list(map(itemgetter(0), map(os.path.splitext, os.listdir(enc_path))))
+
+
+def open_log():
+    """Open and return the contents of the log"""
+
+    with open('./sys_file/log.log', 'r') as f:
+        return f.read()
+
+
+def clear_log():
+    """Clear the contents of the log"""
+
+    with open('./sys_file/log.log', 'w') as f:
+        pass
 
 
 # tests

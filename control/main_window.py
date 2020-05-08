@@ -1,11 +1,10 @@
-from os.path import split
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QToolButton, QApplication, QFileDialog, QMessageBox, QListWidget
 
 from UI.main_window import Ui_MainWindow
 from control.get_key import get_key
+from control.log_window import LogWindow
 from file_op import encrypt_file, decrypt_file, get_encrypted_file_names
 
 
@@ -44,7 +43,6 @@ class MainWindow(QMainWindow):
         self.ui.actionDecrypt_file.triggered.connect(self.__decrypt_file)
         self.ui.actionClose.triggered.connect(self.app.quit)
         self.ui.actionOpen_the_log.triggered.connect(self.__open_log)
-        self.ui.actionClear_the_log.triggered.connect(self.__clear_log)
 
         self.btn_encrypt = MyToolButton()
         self.btn_encrypt.setIcon(QIcon('ico/lock.png'))
@@ -83,6 +81,7 @@ class MainWindow(QMainWindow):
 
     def __encrypt_file(self):
         """Slot for actionEncrypt_file.triggered and btn_encrypt.clicked"""
+
         paths = QFileDialog.getOpenFileNames(self, caption='请选择要加密的文件')[0]
         if paths:
             r = QMessageBox.question(self, '确定加密文件',
@@ -101,6 +100,8 @@ class MainWindow(QMainWindow):
                 self.__refresh_list()
 
     def __decrypt_file(self):
+        """Slot for actionDecrypt_file.triggered and btn_decrypt.clicked"""
+
         file_names = self.ui.listWidget.selectedItems()
         if not file_names:
             QMessageBox.warning(self, '错误', '<p>没有选择文件</p><p>请选择要解密的文件</p>')
@@ -124,7 +125,5 @@ class MainWindow(QMainWindow):
                     QMessageBox.information(self, '完成', '文件已解密完成')
 
     def __open_log(self):
-        pass
-
-    def __clear_log(self):
-        pass
+        self.log_window = LogWindow()
+        self.log_window.show()
