@@ -1,15 +1,17 @@
 import abc
-import dbm
+import dbm.dumb
 import logging
 from os import chmod
 from stat import S_IRUSR
 
 from Crypto.PublicKey import RSA
 
+from paths import db_path
+
 
 class KeyBase(abc.ABC):
     def __init__(self):
-        with dbm.open('./sys_file/db', 'r') as db:
+        with dbm.dumb.open(db_path, 'r') as db:
             self._path = db[b'private_key_path'].decode('utf-8')
             self._pass_phrase = db[b'password']
 
@@ -34,7 +36,7 @@ class KeyGenerator(KeyBase):
 
     def __write_public_key(self):
         """Write public key to database"""
-        with dbm.open('./sys_file/db', 'c') as db:
+        with dbm.dumb.open(db_path, 'c') as db:
             db[b'public_key'] = self.__public_key.export_key()
         logging.info('Public key is generated and written to database')
 
@@ -65,7 +67,7 @@ class KeyGetter(KeyBase):
 
     def __get_public_key(self):
         """Read and return the public key"""
-        with dbm.open('./sys_file/db', 'c') as db:
+        with dbm.dumb.open(db_path, 'c') as db:
             public_key = db[b'public_key']
         logging.info('Public key is read from database')
         return RSA.import_key(public_key)
@@ -90,7 +92,7 @@ class KeyGetter(KeyBase):
 # test
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    with dbm.open('./sys_file/db', 'w') as d:
+    with dbm.dumb.open(db_path, 'w') as d:
         d[b'private_key_path'] = b'./private_key.bin'
     s = KeyGenerator('123123')
     h = KeyGetter('123123')

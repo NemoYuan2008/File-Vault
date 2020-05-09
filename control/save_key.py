@@ -1,4 +1,4 @@
-import dbm
+import dbm.dumb
 from os.path import join
 
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 from UI.save_key import Ui_save_key
 from control.main_window import MainWindow
 from key import KeyGenerator
+from paths import db_path
 
 
 class ThreadGenerateKey(QThread):
@@ -56,7 +57,7 @@ class SaveKeyDialog(QDialog):
         self.msg.button(QMessageBox.Ok).hide()
 
         path = join(self.ui.le_path.text(), 'file-vault-key.pem')
-        with dbm.open('./sys_file/db', 'c') as db:
+        with dbm.dumb.open(db_path, 'c') as db:
             db['private_key_path'] = path.encode('utf-8')
 
         self.thread_generate_key = ThreadGenerateKey()

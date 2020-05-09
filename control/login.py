@@ -1,4 +1,4 @@
-import dbm
+import dbm.dumb
 
 from PyQt5.QtWidgets import QDialog, QMessageBox
 
@@ -10,10 +10,11 @@ from control.save_key import SaveKeyDialog
 
 from password import Authentication, register_password
 from file_op import delete_all_enc_files
+from paths import db_path
 
 
 def initialize():
-    with dbm.open('./sys_file/db', 'c') as db:
+    with dbm.dumb.open(db_path, 'c') as db:
         ret = db.get(b'has_init', b'False')
 
         if b'public_key' in db:

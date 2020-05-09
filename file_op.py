@@ -1,15 +1,10 @@
-import os
-import dbm
 import logging
+import os
 from operator import itemgetter
 
 from encrypt import encrypt_data, decrypt_data
 from key import KeyBase
-
-# get the paths
-with dbm.open('./sys_file/db', 'c') as db:
-    enc_path = db.get(b'enc_path', b'./encrypted_file').decode('utf-8')
-    dec_path = db.get(b'dec_path', b'./decrypted_file').decode('utf-8')
+from paths import log_path, enc_path, working_dir
 
 
 def encrypt_file(file_path: str, rsa_key: KeyBase):
@@ -44,7 +39,7 @@ def encrypt_file(file_path: str, rsa_key: KeyBase):
     logging.info('File %s is encrypted and deleted, encrypted file is written to %s', file_path, out_path)
 
 
-def decrypt_file(file_name: str, rsa_key: KeyBase, dec_path: str = dec_path):
+def decrypt_file(file_name: str, rsa_key: KeyBase, dec_path: str):
     """Decrypt the given file
 
     The decrypted file is saved to directory dec_path with its original name (without '.enc')
@@ -84,14 +79,13 @@ def delete_all_enc_files():
     CAUTION: this function is DANGEROUS!!!!
     ALL ENCRYPTED FILES WILL BE DELETED!!!!
     """
-    for root, dirs, files in os.walk(enc_path, topdown=False):
+    for root, dirs, files in os.walk(working_dir, topdown=False):
         for name in files:
             print(os.path.join(root, name))
-            os.remove(os.path.join(root, name))
+            # os.remove(os.path.join(root, name))
         for name in dirs:
             print(os.path.join(root, name))
-            os.rmdir(os.path.join(root, name))
-    os.remove('./sys_file/db')
+            # os.rmdir(os.path.join(root, name))
     logging.warning('Deleting all Encrypted files and the database!')
 
 
@@ -104,20 +98,20 @@ def get_encrypted_file_names():
 def open_log():
     """Open and return the contents of the log"""
 
-    with open('./sys_file/log.log', 'r') as f:
+    with open(log_path, 'r') as f:
         return f.read()
 
 
 def clear_log():
     """Clear the contents of the log"""
 
-    with open('./sys_file/log.log', 'w') as f:
+    with open(log_path, 'w') as f:
         pass
 
 
 # tests
 if __name__ == '__main__':
-    from key import KeyGenerator, KeyGetter
+    from key import KeyGetter
 
     logging.basicConfig(level=logging.DEBUG)
 

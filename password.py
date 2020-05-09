@@ -1,7 +1,9 @@
-import dbm
+import dbm.dumb
 import logging
 
 from Crypto.Hash import SHA3_256
+
+from paths import db_path
 
 
 def register_password(password):
@@ -13,7 +15,7 @@ def register_password(password):
         password = password.encode('utf-8')
     password_hash = SHA3_256.new(password).digest()
 
-    with dbm.open('./sys_file/db', 'c') as db:
+    with dbm.dumb.open(db_path, 'c') as db:
         db[b'has_init'] = b'True'
         db[b'password'] = password_hash
         db[b'wrong_count'] = b'0'
@@ -24,13 +26,13 @@ def register_password(password):
 class Authentication(object):
     def __init__(self):
         """Read correct_password_hash and wrong_count from db"""
-        with dbm.open('./sys_file/db', 'c') as db:
+        with dbm.dumb.open(db_path, 'c') as db:
             self.__correct_password_hash = db.get(b'password', None)
             self.__wrong_count = int(db.get(b'wrong_count', b'0'))
 
     def __del__(self):
         """Save wrong_count to db"""
-        with dbm.open('./sys_file/db', 'c') as db:
+        with dbm.dumb.open(db_path, 'c') as db:
             db[b'wrong_count'] = str(self.__wrong_count).encode('utf-8')
 
     def check(self, input_password):
