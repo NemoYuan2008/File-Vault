@@ -81,11 +81,10 @@ def delete_all_enc_files():
     """
     for root, dirs, files in os.walk(working_dir, topdown=False):
         for name in files:
-            print(os.path.join(root, name))
-            # os.remove(os.path.join(root, name))
+            os.remove(os.path.join(root, name))
         for name in dirs:
-            print(os.path.join(root, name))
-            # os.rmdir(os.path.join(root, name))
+            os.rmdir(os.path.join(root, name))
+    os.rmdir(working_dir)
     logging.warning('Deleting all Encrypted files and the database!')
 
 
