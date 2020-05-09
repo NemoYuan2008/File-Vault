@@ -4,11 +4,14 @@ import logging
 import os
 
 from control.main import Main
-from paths import working_dir, log_path
+from paths import working_dir, log_path, enc_path
 
 if __name__ == '__main__':
     if not os.path.exists(working_dir):
         os.mkdir(working_dir)
+
+    if not os.path.exists(enc_path):
+        os.mkdir(enc_path)
 
     logging.basicConfig(filename=log_path,
                         level=logging.INFO,
