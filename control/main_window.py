@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QToolButton, QApplication, QFileDialog, QMessageBox, QListWidget
 
+from ico.res_path import icon_path
 from UI.main_window import Ui_MainWindow
 from control.get_key import get_key
 from control.log_window import LogWindow
@@ -45,22 +46,22 @@ class MainWindow(QMainWindow):
         self.ui.actionOpen_the_log.triggered.connect(self.__open_log)
 
         self.btn_encrypt = MyToolButton()
-        self.btn_encrypt.setIcon(QIcon('ico/lock.png'))
+        self.btn_encrypt.setIcon(QIcon(icon_path['lock']))
         self.btn_encrypt.setText('加密文件')
         self.btn_encrypt.clicked.connect(self.__encrypt_file)
 
         self.btn_decrypt = MyToolButton()
-        self.btn_decrypt.setIcon(QIcon('ico/unlock.png'))
+        self.btn_decrypt.setIcon(QIcon(icon_path['unlock']))
         self.btn_decrypt.setText('解密文件')
         self.btn_decrypt.clicked.connect(self.__decrypt_file)
 
         self.btn_open_log = MyToolButton()
-        self.btn_open_log.setIcon(QIcon('ico/log.png'))
+        self.btn_open_log.setIcon(QIcon(icon_path['log']))
         self.btn_open_log.setText('查看日志')
         self.btn_open_log.clicked.connect(self.__open_log)
 
         self.btn_exit = MyToolButton()
-        self.btn_exit.setIcon(QIcon('ico/exit.png'))
+        self.btn_exit.setIcon(QIcon(icon_path['exit']))
         self.btn_exit.setText('退出')
         self.btn_exit.clicked.connect(self.app.quit)
 
