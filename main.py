@@ -16,5 +16,5 @@ if __name__ == '__main__':
     logging.basicConfig(filename=log_path,
                         level=logging.INFO,
                         format='%(levelname)s %(asctime)s %(message)s',
-                        datefmt='%m/%d/%Y %I:%M:%S %p')
+                        datefmt='%m/%d/%Y %H:%M:%S %p')
     m = Main()

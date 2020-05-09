@@ -36,7 +36,7 @@ def encrypt_file(file_path: str, rsa_key: KeyBase):
 
     os.remove(file_path)
 
-    logging.info('File %s is encrypted and deleted, encrypted file is written to %s', file_path, out_path)
+    logging.info('File %s is encrypted and deleted, encrypted file is written to Vault', file_path)
 
 
 def decrypt_file(file_name: str, rsa_key: KeyBase, dec_path: str):
