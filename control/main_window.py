@@ -109,21 +109,22 @@ class MainWindow(QMainWindow):
         else:
             QMessageBox.information(self, '提示', '请选择解密后的文件要保存在哪个文件夹')
             dec_path = QFileDialog.getExistingDirectory(self, caption='选择保存路径')
-            r = QMessageBox.question(self, '确定解密文件',
-                                     '<p>所选文件将被解密并保存至所选文件夹中</p>'
-                                     '<p>原加密文件将被删除, 确定?</p>')
-            if r == QMessageBox.Yes:
-                for file_name in file_names:
-                    try:
-                        decrypt_file(file_name.text() + '.enc', self.__key, dec_path)
-                    except FileExistsError:
-                        QMessageBox.warning(self, '解密错误',
-                                            '<p>解密文件</p>'
-                                            '<p>%s</p>'
-                                            '<p>时发生错误, 因为所选路径中已经有和它同名的文件</p> '
-                                            '<p>请将同名文件移动至别处后再试</p>' % file_name)
-                    self.__refresh_list()
-                    QMessageBox.information(self, '完成', '文件已解密完成')
+            if dec_path:
+                r = QMessageBox.question(self, '确定解密文件',
+                                         '<p>所选文件将被解密并保存至所选文件夹中</p>'
+                                         '<p>原加密文件将被删除, 确定?</p>')
+                if r == QMessageBox.Yes:
+                    for file_name in file_names:
+                        try:
+                            decrypt_file(file_name.text() + '.enc', self.__key, dec_path)
+                        except FileExistsError:
+                            QMessageBox.warning(self, '解密错误',
+                                                '<p>解密文件</p>'
+                                                '<p>%s</p>'
+                                                '<p>时发生错误, 因为所选路径中已经有和它同名的文件</p> '
+                                                '<p>请将同名文件移动至别处后再试</p>' % file_name)
+                        self.__refresh_list()
+                        QMessageBox.information(self, '完成', '文件已解密完成')
 
     def __open_log(self):
         self.log_window = LogWindow()
