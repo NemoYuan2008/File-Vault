@@ -1,3 +1,9 @@
+"""Provide paths for png icons
+
+Needed by pyinstaller
+"""
+
+
 import os
 import sys
 
@@ -16,4 +22,5 @@ icon_path = {
     'lock': resource_path('lock.png'),
     'unlock': resource_path('unlock.png'),
     'log': resource_path('log.png'),
+    'about': resource_path('about.png')
 }

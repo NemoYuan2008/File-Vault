@@ -60,6 +60,11 @@ class MainWindow(QMainWindow):
         self.btn_open_log.setText('查看日志')
         self.btn_open_log.clicked.connect(self.__open_log)
 
+        self.btn_about = MyToolButton()
+        self.btn_about.setIcon(QIcon(icon_path['about']))
+        self.btn_about.setText('关于')
+        self.btn_about.clicked.connect(self.__about)
+
         self.btn_exit = MyToolButton()
         self.btn_exit.setIcon(QIcon(icon_path['exit']))
         self.btn_exit.setText('退出')
@@ -70,6 +75,8 @@ class MainWindow(QMainWindow):
         self.ui.toolBar.addWidget(self.btn_decrypt)
         self.ui.toolBar.addSeparator()
         self.ui.toolBar.addWidget(self.btn_open_log)
+        self.ui.toolBar.addSeparator()
+        self.ui.toolBar.addWidget(self.btn_about)
         self.ui.toolBar.addSeparator()
         self.ui.toolBar.addWidget(self.btn_exit)
 
@@ -131,3 +138,11 @@ class MainWindow(QMainWindow):
     def __open_log(self):
         self.log_window = LogWindow()
         self.log_window.show()
+
+    def __about(self):
+        QMessageBox.about(self,
+                          '关于文件保险柜',
+                          '<p>作者: 袁博实</p>'
+                          '<p>学号: U201714853</p>'
+                          '<p>使用PyQt5开发</p>'
+                          '<p>电子商务与电子政务安全  期末作业</p>')
