@@ -76,6 +76,8 @@ class MainWindow(QMainWindow):
         self.ui.listWidget.setSelectionMode(QListWidget.ExtendedSelection)
         self.__refresh_list()
 
+        self.setCentralWidget(self.ui.centralwidget)
+
     def __refresh_list(self):
         self.ui.listWidget.clear()
         self.ui.listWidget.addItems(get_encrypted_file_names())
