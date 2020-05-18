@@ -50,12 +50,19 @@ def decrypt_file(file_name: str, rsa_key: KeyBase, dec_path: str):
     :param rsa_key: a KeyBase class to provide private key
 
     :raise FileExistsError: if file with the same name exists in dec_path
+    :raise ValueError: if verification of file fails
     """
 
     file_path = os.path.join(enc_path, file_name)
     with open(file_path, 'rb') as f:
         data = f.read()
-    data = decrypt_data(data, rsa_key)
+
+    try:
+        data = decrypt_data(data, rsa_key)
+    except ValueError:
+        logging.warning('Verification of file %s failed, decryption canceled, broken file is deleted', file_name)
+        os.remove(file_path)
+        raise ValueError
 
     # path + file name without '.enc'
     out_path = os.path.join(dec_path, os.path.splitext(file_name)[0])

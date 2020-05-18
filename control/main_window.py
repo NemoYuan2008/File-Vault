@@ -114,7 +114,9 @@ class MainWindow(QMainWindow):
 
         file_names = self.ui.listWidget.selectedItems()
         if not file_names:
-            QMessageBox.warning(self, '错误', '<p>没有选择文件</p><p>请选择要解密的文件</p>')
+            QMessageBox.warning(self, '错误',
+                                '<p>没有选择文件</p>'
+                                '<p>请选择要解密的文件</p>')
         else:
             QMessageBox.information(self, '提示', '请选择解密后的文件要保存在哪个文件夹')
             dec_path = QFileDialog.getExistingDirectory(self, caption='选择保存路径')
@@ -123,16 +125,28 @@ class MainWindow(QMainWindow):
                                          '<p>所选文件将被解密并保存至所选文件夹中</p>'
                                          '<p>原加密文件将被删除, 确定?</p>')
                 if r == QMessageBox.Yes:
+                    success = True
                     for file_name in file_names:
+                        s = file_name.text()
                         try:
                             decrypt_file(file_name.text() + '.enc', self.__key, dec_path)
                         except FileExistsError:
+                            success = False
                             QMessageBox.warning(self, '解密错误',
                                                 '<p>解密文件</p>'
                                                 '<p>%s</p>'
                                                 '<p>时发生错误, 因为所选路径中已经有和它同名的文件</p> '
                                                 '<p>请将同名文件移动至别处后再试</p>' % file_name)
-                        self.__refresh_list()
+                        except ValueError:
+                            success = False
+                            QMessageBox.warning(self, '解密错误',
+                                                '<p>解密文件</p>'
+                                                '<p>%s</p>'
+                                                '<p>时发生错误, 因为该文件验证失败, 可能已损坏</p> '
+                                                '<p>损坏的文件已被删除</p>' % file_name)
+
+                    self.__refresh_list()
+                    if success:
                         QMessageBox.information(self, '完成', '文件已解密完成')
 
     def __open_log(self):
