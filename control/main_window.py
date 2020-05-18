@@ -113,7 +113,7 @@ class MainWindow(QMainWindow):
                         QMessageBox.warning(self, '加密错误',
                                             '<p>加密文件</p>'
                                             '<p>%s</p>'
-                                            '<p>时发生错误, 因为无法打开这个文件</p> ' % path)
+                                            '<p>时发生错误, 因为没有权限, 无法打开这个文件</p> ' % path)
                 self.__refresh_list()
 
     def __decrypt_file(self):
@@ -144,14 +144,14 @@ class MainWindow(QMainWindow):
                                                 '<p>解密文件</p>'
                                                 '<p>%s</p>'
                                                 '<p>时发生错误, 因为所选路径中已经有和它同名的文件</p> '
-                                                '<p>请将同名文件移动至别处后再试</p>' % file_name)
+                                                '<p>请将同名文件移动至别处后再试</p>' % file_name.text())
                         except ValueError:
                             success = False
                             QMessageBox.warning(self, '解密错误',
                                                 '<p>解密文件</p>'
                                                 '<p>%s</p>'
                                                 '<p>时发生错误, 因为该文件验证失败, 可能已损坏</p> '
-                                                '<p>损坏的文件已被删除</p>' % file_name)
+                                                '<p>损坏的文件已被删除</p>' % file_name.text())
 
                     self.__refresh_list()
                     if success:
