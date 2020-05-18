@@ -14,6 +14,8 @@ class Ui_DialogEnterPasswd(object):
     def setupUi(self, DialogEnterPasswd):
         DialogEnterPasswd.setObjectName("DialogEnterPasswd")
         DialogEnterPasswd.resize(400, 165)
+        DialogEnterPasswd.setMinimumSize(QtCore.QSize(400, 165))
+        DialogEnterPasswd.setMaximumSize(QtCore.QSize(400, 165))
         self.layoutWidget = QtWidgets.QWidget(DialogEnterPasswd)
         self.layoutWidget.setGeometry(QtCore.QRect(10, 10, 381, 161))
         self.layoutWidget.setObjectName("layoutWidget")

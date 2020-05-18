@@ -45,6 +45,7 @@ class MainWindow(QMainWindow):
         self.ui.actionClose.triggered.connect(self.app.quit)
         self.ui.actionOpen_the_log.triggered.connect(self.__open_log)
         self.ui.actionClear_the_log.triggered.connect(self.__clear_log)
+        self.ui.actionAbout.triggered.connect(self.__about)
 
         self.btn_encrypt = MyToolButton()
         self.btn_encrypt.setIcon(QIcon(icon_path['lock']))
