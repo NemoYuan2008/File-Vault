@@ -108,6 +108,11 @@ class MainWindow(QMainWindow):
                                             '<p>%s</p>'
                                             '<p>时发生错误, 因为保险柜中已经有和它同名的文件</p> '
                                             '<p>请将原文件重命名后再试</p>' % path)
+                    except OSError:
+                        QMessageBox.warning(self, '加密错误',
+                                            '<p>加密文件</p>'
+                                            '<p>%s</p>'
+                                            '<p>时发生错误, 因为无法打开这个文件</p> ' % path)
                 self.__refresh_list()
 
     def __decrypt_file(self):
