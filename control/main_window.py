@@ -97,7 +97,8 @@ class MainWindow(QMainWindow):
         if paths:
             r = QMessageBox.question(self, '确定加密文件',
                                      '<p>所选文件将被加密并保存至保险柜中</p>'
-                                     '<p>原文件将被删除, 确定?</p>')
+                                     '<p>原文件将被删除, 确定?</p>',
+                                     defaultButton=QMessageBox.Yes)
             if r == QMessageBox.Yes:
                 for path in paths:
                     try:
@@ -129,7 +130,8 @@ class MainWindow(QMainWindow):
             if dec_path:
                 r = QMessageBox.question(self, '确定解密文件',
                                          '<p>所选文件将被解密并保存至所选文件夹中</p>'
-                                         '<p>原加密文件将被删除, 确定?</p>')
+                                         '<p>原加密文件将被删除, 确定?</p>',
+                                         defaultButton=QMessageBox.Yes)
                 if r == QMessageBox.Yes:
                     success = True
                     for file_name in file_names:
