@@ -2,11 +2,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QToolButton, QApplication, QFileDialog, QMessageBox, QListWidget
 
-from ico.res_path import icon_path
 from UI.main_window import Ui_MainWindow
 from control.get_key import get_key
 from control.log_window import LogWindow
-from file_op import encrypt_file, decrypt_file, get_encrypted_file_names
+from file_op import encrypt_file, decrypt_file, get_encrypted_file_names, clear_log
+from ico.res_path import icon_path
 
 
 class MyToolButton(QToolButton):
@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         self.ui.actionDecrypt_file.triggered.connect(self.__decrypt_file)
         self.ui.actionClose.triggered.connect(self.app.quit)
         self.ui.actionOpen_the_log.triggered.connect(self.__open_log)
+        self.ui.actionClear_the_log.triggered.connect(self.__clear_log)
 
         self.btn_encrypt = MyToolButton()
         self.btn_encrypt.setIcon(QIcon(icon_path['lock']))
@@ -149,11 +150,21 @@ class MainWindow(QMainWindow):
                     if success:
                         QMessageBox.information(self, '完成', '文件已解密完成')
 
+    def __clear_log(self):
+        """Slot for actionClear_the_log.triggered"""
+
+        clear_log()
+        QMessageBox.information(self, '日志已清除', '日志已清除')
+
     def __open_log(self):
+        """Slot for actionOpen_the_log.triggered and btn_open_log.clicked"""
+
         self.log_window = LogWindow()
         self.log_window.show()
 
     def __about(self):
+        """Slot for btn_about.clicked"""
+
         QMessageBox.about(self,
                           '关于文件保险柜',
                           '<p>作者: 袁博实</p>'
