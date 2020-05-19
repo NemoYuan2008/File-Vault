@@ -8,9 +8,9 @@ from UI.set_password import Ui_DialogSetPasswd
 from control.main_window import MainWindow
 from control.save_key import SaveKeyDialog
 
-from password import Authentication, register_password
-from file_op import delete_all_enc_files
-from paths import db_path
+from algorithm.password import Authentication, register_password
+from algorithm.file_op import delete_all_enc_files
+from algorithm.paths import db_path
 
 
 def initialize():

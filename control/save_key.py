@@ -6,8 +6,8 @@ from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 
 from UI.save_key import Ui_save_key
 from control.main_window import MainWindow
-from key import KeyGenerator
-from paths import db_path
+from algorithm.key import KeyGenerator
+from algorithm.paths import db_path
 
 
 class ThreadGenerateKey(QThread):

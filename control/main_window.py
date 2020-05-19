@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QToolButton, QApplication, QFileDialog,
 from UI.main_window import Ui_MainWindow
 from control.get_key import get_key
 from control.log_window import LogWindow
-from file_op import encrypt_file, decrypt_file, get_encrypted_file_names, clear_log
+from algorithm.file_op import encrypt_file, decrypt_file, get_encrypted_file_names, clear_log
 from ico.res_path import icon_path
 
 

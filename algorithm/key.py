@@ -6,7 +6,7 @@ from stat import S_IRUSR
 
 from Crypto.PublicKey import RSA
 
-from paths import db_path
+from algorithm.paths import db_path
 
 
 class KeyBase(abc.ABC):

@@ -4,7 +4,7 @@ import logging
 from Crypto.Hash import SHA3_256
 from Crypto.Random import get_random_bytes
 
-from paths import db_path
+from algorithm.paths import db_path
 
 
 def calc_hash(password, salt):

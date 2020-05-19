@@ -4,7 +4,7 @@ import logging
 import os
 
 from control.main import Main
-from paths import working_dir, log_path, enc_path
+from algorithm.paths import working_dir, log_path, enc_path
 
 if __name__ == '__main__':
     if not os.path.exists(working_dir):

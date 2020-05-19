@@ -2,9 +2,9 @@ import logging
 import os
 from operator import itemgetter
 
-from encrypt import encrypt_data, decrypt_data
-from key import KeyBase
-from paths import log_path, enc_path, working_dir
+from algorithm.encrypt import encrypt_data, decrypt_data
+from algorithm.key import KeyBase
+from algorithm.paths import log_path, enc_path, working_dir
 
 
 def encrypt_file(file_path: str, rsa_key: KeyBase):
@@ -117,7 +117,7 @@ def clear_log():
 
 # tests
 if __name__ == '__main__':
-    from key import KeyGetter
+    from algorithm.key import KeyGetter
 
     logging.basicConfig(level=logging.DEBUG)
 

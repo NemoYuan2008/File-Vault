@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox
 
-from key import KeyGetter
+from algorithm.key import KeyGetter
 
 
 def get_key():

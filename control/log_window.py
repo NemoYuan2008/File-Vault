@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
 
 from UI.log_window import Ui_log_window
-from file_op import open_log, clear_log
+from algorithm.file_op import open_log, clear_log
 
 
 class LogWindow(QWidget):

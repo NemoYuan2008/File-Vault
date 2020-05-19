@@ -1,7 +1,7 @@
 from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES, PKCS1_OAEP
 
-from key import KeyBase
+from algorithm.key import KeyBase
 
 
 def encrypt_data(data: bytes, rsa_key: KeyBase):
@@ -54,7 +54,7 @@ def decrypt_data(data: bytes, rsa_key: KeyBase):
 
 # tests
 if __name__ == '__main__':
-    from key import KeyGenerator
+    from algorithm.key import KeyGenerator
 
     k = KeyGenerator(b'123')
     t = get_random_bytes(100)
