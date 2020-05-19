@@ -1,9 +1,9 @@
 # File Vault - Encrypt Local Files
 
 ## Running from scripts
-If you would like to run the program from scripts, you need to install Python 3.5 or later
+If you would like to run the program from scripts, you need to install Python 3.5 or later.
 
-to run the program from scripts on macOS or Linux:
+To run the program from scripts on macOS or Linux:
 
 ```shell script
 cd /path/to/File-Vault
